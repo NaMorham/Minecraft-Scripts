@@ -1,0 +1,61 @@
+-- dig straight down until limit is
+-- reached or cannot clear down
+
+local targs = {...}
+
+-- control vars
+local height = 10
+local numTries = 5
+
+-- temp vars
+local blocksDug = 1
+
+if not os.loadAPI("turtleEx") then
+  error("Could not load required api.")
+  return
+end
+
+local function usage()
+  print("Usage: digdown <height> <num tries>")
+end
+
+-- parse args
+if #targs < 2 then
+  usage()
+  return false
+end
+
+
+-- height
+height = tonumber(targs[1])
+if height < 1 then
+  print("Invalid height passed")
+  return false
+end
+
+-- numTries
+numTries = tonumber(targs[2])
+if numTries < 1 then
+  numTries = 1
+end
+
+-- start
+print("Dig down " .. height .. " blocks, try " .. numTries .. " times to dig")
+for i = 1, height do
+  if not turtleEx.digDown(numTries) then
+    print("Cannot dig further.")
+    print("Reached a depth of " .. blocksDug .. " blocks")
+    print("Returning...")
+    break
+  end
+  turtle.down()
+  blocksDug = blocksDug + 1
+end
+
+-- return
+for i = 1, blocksDug do
+  turtle.up()
+end
+
+print("Done.")
+print(" ")

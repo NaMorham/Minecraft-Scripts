@@ -1,0 +1,20 @@
+shell.run ( "placeforward", 2 )
+turtle.turnLeft()
+shell.run ( "placeforward", 4 )
+turtle.turnRight()
+shell.run ( "placeforward", 8 )
+turtle.turnRight()
+shell.run ( "placeforward", 8 )
+turtle.turnRight()
+shell.run ( "placeforward", 8 )
+turtle.turnRight()
+shell.run ( "placeforward", 3 )
+
+turtle.forward()
+turtle.turnLeft()
+turtle.forward()
+turtle.forward()
+
+turtle.turnRight()
+turtle.turnRight()
+
