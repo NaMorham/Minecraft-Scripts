@@ -1,0 +1,186 @@
+local targs={...}
+local numBlocks = 42
+local height = 7
+local selSlot = 1
+local numTries = 5
+
+
+if not os.loadAPI("turtleEx") then
+  error("Could not load required api.")
+  return
+end
+
+
+-- args {num blocks, numtries}
+-- rely on the api to handle the number of tries
+
+local function usage()
+  print("Usage")
+  print("  placeforward <numblocks> <height> [num tries]")
+end
+
+-- if #args > 2 or #args < 2 
+-- print("Num args = " .. #targs)
+if (targs[1] == nil) or (targs[1] == "help") or (targs[1] == "?") or (#targs > 3) or (#targs < 2) then
+  usage()
+  return false
+end
+
+if targs[1] ~= nil then
+  numBlocks = tonumber(targs[1])
+  if numBlocks < 2 then
+    usage()
+    return false
+  end
+end
+
+if targs[2] ~= nil then
+  height = tonumber(targs[2])
+  if height < 1 then
+    usage()
+    return false
+  end
+end
+
+if targs[3] ~= nil then
+  numTries = tonumber(targs[3])
+  if numTries < 1 then
+    usage()
+    return false
+  end
+end
+
+
+---
+local maxSlot = 8
+function getBlocks()
+  local startSlot = 0
+  local itemCount = 0
+
+  selSlot = startSlot
+  repeat
+    selSlot = selSlot + 1
+    itemCount = turtle.getItemCount( selSlot )
+    print("(itemCount > 0) -> (" .. itemCount .. " > 0) = " .. tostring(itemCount > 0) )
+    print("(selSlot > maxSlot) -> (" .. selSlot .. " > " .. maxSlot .. ") = " .. tostring(selSlot > maxSlot) )
+  until (itemCount > 0) or (selSlot > maxSlot)
+  if selSlot > maxSlot then
+    print("No materials to build with")
+    return false
+  end
+  turtle.select(selSlot)
+  return true
+end
+
+---
+function digLine(length, numTries)
+  for i=1,length do
+    turtleEx.digForward(numTries)
+    turtle.forward()
+    turtle.digDown()
+    if turtle.getItemCount( selSlot ) < 1 then
+      getBlocks()
+    end
+    turtle.placeDown()
+  end
+end
+
+---
+function wallCycle(length, numTries)
+  -- dig out, placing below
+  print("-- Begin outward line")
+  digLine(length, numTries)
+  -- move up
+  print("-- move up and turn")
+  turtleEx.digUp(numTries)
+  turtle.up()
+  turtle.turnRight()
+  turtle.turnRight()
+  turtle.placeDown()
+  -- come back, placing below
+  print("-- Begin return line")
+  digLine(length-1, numTries)
+  turtle.forward()
+end
+
+---
+-- Build a wall 2 high
+--
+-- Dig out, the place on way back
+function wall2(length, numTries)
+  local todo = 1  
+end
+
+---
+local numCycles = math.floor(height / 2)
+local modCycles = height % 2
+local cycleLen = numBlocks - 1
+
+-- special case
+if height < 3 then
+  
+end
+
+print("")
+print("Begin buildwall(" .. numBlocks .. ", " .. height .. ", " .. numTries .. ")")
+print(">> numTries = " .. numTries)
+print(">> numCycles = " .. numCycles)
+print(">> modCycles = " .. modCycles)
+print(">> cycleLen = " .. cycleLen)
+print("")
+
+-- from start position, dig forward, clear up and below
+print("Check for building material")
+if not getBlocks() then
+  return false
+end
+
+print("move forward to start of cycle area")
+shell.run("clearforward", 1, numTries)
+
+---
+local clearHeight = height - 1
+print("Clear end row")
+for j=1,clearHeight do
+  turtleEx.digUp(numTries)
+  turtle.up()
+end
+for j=1,clearHeight do
+  turtle.down()
+end
+
+
+---
+print("Begin cycles")
+for j=1,numCycles do
+  if j > 1 then
+    turtleEx.digUp(numTries)
+    turtle.up()
+    turtle.turnRight()
+    turtle.turnRight()
+  end
+  print("- Begin cycle " .. j .. " of " .. numCycles)
+  wallCycle(cycleLen, numTries)
+end
+
+
+local foom = 1
+if foom > 0 then
+  return false
+end
+
+
+if modCycles > 0 then
+  if numCycles > 0 then
+    turtleEx.digUp(numTries)
+    turtle.up()
+    turtle.turnRight()
+    turtle.turnRight()
+  end
+  digLine(cycleLen, numTries)
+  turtleEx.back(cycleLen)
+end
+
+
+
+return true

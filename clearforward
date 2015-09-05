@@ -4,42 +4,17 @@ local numBlocks = 1
 local dfltTries = 10
 local numTries = dfltTries
 
+if not os.loadAPI("turtleEx") then
+  error("Could not load required api.")
+  return
+end
+
 local function showHelp()
     print("Usage: clearforward [numBlocks] [numTries]")
     print("Where:")
     print("   numBlocks is the number of blocks to move forward (defaults to 1)")
     print("   numTries is the number of times to try clearing ahead (defaults to "..dfltTries)
     print(" ")    
-end
-
-local function digForward()
-  local tryCount = 1
-  turtle.dig()
-  while turtle.detect() and (tryCount <= numTries) do
-    turtle.dig()
-    tryCount = tryCount + 1
-    print("Try and clear ahead (attempt " .. tryCount .. "/" .. numTries .. ")")
-    sleep(0.5)
-  end
-  if tryCount > numTries then
-    error("Cannot dig forward")
-    return
-  end
-end
-
-local function digUp()
-  local tryCount = 1
-  turtle.digUp()
-  while turtle.detectUp() and (tryCount <= numTries) do
-    turtle.digUp()
-    tryCount = tryCount + 1
-    print("Try and clear up (attempt " .. tryCount .. "/" .. numTries .. ")")
-    sleep(0.5)
-  end
-  if tryCount > numTries then
-    error("Cannot dig up.")
-    return
-  end
 end
 
 -- parse args
@@ -63,9 +38,9 @@ if targs[2] ~= nil then
 end
 
 for i=1,numBlocks do
-  digForward()
+  turtleEx.digForward(numTries)
   turtle.forward()
-  digUp()
+  turtleEx.digUp(numTries)
   turtle.digDown()
 end
 
