@@ -53,7 +53,7 @@ end
 
 ---
 local maxSlot = 8
-function getBlocks()
+function getBlocks_old()
   local startSlot = 0
   local itemCount = 0
 
@@ -72,54 +72,70 @@ function getBlocks()
   return true
 end
 
----
-function digLine(length, numTries)
-  for i=1,length do
-    turtleEx.digForward(numTries)
-    turtle.forward()
-    turtle.digDown()
-    if turtle.getItemCount( selSlot ) < 1 then
-      getBlocks()
-    end
-    turtle.placeDown()
-  end
-end
 
 ---
-function wallCycle(length, numTries)
-  -- dig out, placing below
-  print("-- Begin outward line")
-  digLine(length, numTries)
-  -- move up
-  print("-- move up and turn")
-  turtleEx.digUp(numTries)
-  turtle.up()
-  turtle.turnRight()
-  turtle.turnRight()
-  turtle.placeDown()
-  -- come back, placing below
-  print("-- Begin return line")
-  digLine(length-1, numTries)
-  turtle.forward()
+-- Assumes that selSlot is set
+--
+function getBlocks()
+  local itemCount = turtle.getItemCount( selSlot )
+  while itemCount < 1 and selSlot <= maxSlot do
+    selSlot = selSlot + 1
+    itemCount = turtle.getItemCount( selSlot )
+  end
+
+  if selSlot >= maxSlot then
+    printError("Out of building materials")
+    return false
+  end
+  turtle.select(selSlot)
+  return true
 end
+
 
 ---
 -- Build a wall 2 high
 --
--- Dig out, the place on way back
+-- Dig out, the place behind and down on way back
 function wall2(length, numTries)
-  local todo = 1  
+  for k=1,length do
+    turtleEx.digForward(numTries)
+    turtle.forward()
+    turtle.digDown()
+  end
+  for k=1,length do
+    if not getBlocks() then
+      return false
+    end
+    turtle.placeDown()
+    turtle.back()
+    turtle.place()
+  end
 end
+
 
 ---
-local numCycles = math.floor(height / 2)
+-- Build a single layer
+--
+-- Dig out and replace behind
+function wall1(length, numTries)
+  for k=1,length do
+    turtleEx.digForward(numTries)
+    turtle.forward()
+  end
+  for k=1,length do
+    turtle.back()
+    if not getBlocks() then
+      return false
+    end
+    turtle.place()
+  end
+end
+
+
+---
+local numCycles = math.floor((height + 1) / 2)
 local modCycles = height % 2
 local cycleLen = numBlocks - 1
-
--- special case
-if height < 3 then
-  
-end
 
 print("")
 print("Begin buildwall(" .. numBlocks .. ", " .. height .. ", " .. numTries .. ")")
@@ -129,58 +145,52 @@ print(">> modCycles = " .. modCycles)
 print(">> cycleLen = " .. cycleLen)
 print("")
 
--- from start position, dig forward, clear up and below
+
 print("Check for building material")
 if not getBlocks() then
   return false
 end
 
+
+-- from start position, dig forward, clear up and below
 print("move forward to start of cycle area")
 shell.run("clearforward", 1, numTries)
 
+
 ---
-local clearHeight = height - 1
 print("Clear end row")
-for j=1,clearHeight do
+for j=1,height-1 do
   turtleEx.digUp(numTries)
   turtle.up()
 end
-for j=1,clearHeight do
+for j=1,height-1 do
   turtle.down()
 end
 
 
 ---
-print("Begin cycles")
 for j=1,numCycles do
   if j > 1 then
-    turtleEx.digUp(numTries)
-    turtle.up()
-    turtle.turnRight()
-    turtle.turnRight()
+    turtleEx.up(2)
   end
-  print("- Begin cycle " .. j .. " of " .. numCycles)
-  wallCycle(cycleLen, numTries)
+  wall2(cycleLen, numTries)
 end
 
-
-local foom = 1
-if foom > 0 then
-  return false
+-- Do the extra row if required
+if modCycles == 0 then
+  turtle.up()
+  wall1(cycleLen, numTries)
 end
 
-
-if modCycles > 0 then
-  if numCycles > 0 then
-    turtleEx.digUp(numTries)
-    turtle.up()
-    turtle.turnRight()
-    turtle.turnRight()
-  end
-  digLine(cycleLen, numTries)
-  turtleEx.back(cycleLen)
+-- Cleanup the end column
+for k=1,height-1 do
+  turtle.down()
+  turtle.placeUp()
 end
+turtle.placeDown()
+turtle.back()
+turtle.place()
 
 
-
+print("Done.")
 return true
