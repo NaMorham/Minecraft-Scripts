@@ -1,0 +1,8 @@
+shell.run("walltop", 10)
+turtle.turnRight()
+shell.run("walltop", 10)
+turtle.turnRight()
+shell.run("walltop", 10)
+turtle.turnRight()
+shell.run("walltop", 10)
+turtle.turnRight()

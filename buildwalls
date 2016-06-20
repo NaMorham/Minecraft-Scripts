@@ -89,13 +89,13 @@ shiftLeft = math.floor(wallWidth / 2)
 shiftRight = wallWidth - shiftLeft
 
 
-turtleEx.digForward()
+turtleEx.digForward(numTries)
 turtle.forward()
   for k = 1, 5 do
     turtle.attack()
   end
 
-turtleEx.digForward()
+turtleEx.digForward(numTries)
 turtle.forward()
   for k = 1, 5 do
     turtle.attack()
@@ -103,26 +103,26 @@ turtle.forward()
 turtle.turnLeft()
 
 for i = 1,wallHeight+1 do
-  shell.run( "placeforward", shiftLeft )
+  shell.run( "placeforward", shiftLeft, numTries )
   turtle.turnRight()
-  shell.run( "placeforward", wallLength -1 )
+  shell.run( "placeforward", wallLength -1, numTries )
   turtle.turnRight()
-  shell.run( "placeforward", wallWidth - 1 )
+  shell.run( "placeforward", wallWidth - 1, numTries )
   turtle.turnRight()
-  shell.run( "placeforward", wallLength - 1 )
+  shell.run( "placeforward", wallLength - 1, numTries )
   turtle.turnRight()
-  shell.run( "placeforward", shiftLeft )
+  shell.run( "placeforward", shiftLeft, numTries )
   turtleEx.digUp(numTries)
   turtle.up()
 end
 
 -- return home --
 turtle.turnLeft()
-turtleEx.digForward()
+turtleEx.digForward(numTries)
 turtle.forward()
 
 for i = 1,wallHeight+1 do
-  turtleEx.digDown()
+  turtleEx.digDown(numTries)
   turtle.down()
 end
 
