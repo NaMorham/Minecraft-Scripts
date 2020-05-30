@@ -16,6 +16,36 @@ end
 -- args {num blocks, numtries, torchslot}
 -- rely on the api to handle the number of tries
 
+local function placeTorchOld(torchslot)
+  turtle.select(torchSlot)
+  turtle.back()
+  turtle.turnRight()
+  turtle.placeUp()
+  turtle.turnLeft()
+  turtle.forward()
+  turtle.select(1)
+end
+
+local function placeTorchAhead(torchslot)
+  turtle.select(torchSlot)
+  turtle.back()
+  turtle.back()
+  turtle.up()
+  turtle.place()
+  turtle.down()
+  turtle.forward()
+  turtle.forward()
+  turtle.select(1)
+end
+
+local function placeTorch(torchslot)
+  turtle.select(torchSlot)
+  turtle.back()
+  turtle.placeUp()
+  turtle.forward()
+  turtle.select(1)
+end
+
 local function usage()
   print("Usage")
   print("  mineboth <numblocks> [num tries]")
@@ -27,7 +57,7 @@ if (targs[1] == nil) or (targs[1] == "help") or (targs[1] == "?") then
   return false
 end
 
-if targs[1] ~= nil then
+if (targs[1] ~= nil) then
   numBlocks = tonumber(targs[1])
   if numBlocks < 1 then
     usage()
@@ -35,39 +65,62 @@ if targs[1] ~= nil then
   end
 end
 
-if targs[2] ~= nil then
+if (targs[2] ~= nil) then
   numTries = tonumber(targs[2])
   if numTries < 1 then
     numTries = 1
   end
 end
 
-if targs[3] ~= nil then
+print("Num args = " .. #targs)
+if (targs[3] ~= nil) then
+  print("arg 3 = " .. targs[3])
   torchSlot = tonumber(targs[3])
-  if torchSlot < 1 or torchSlot > 16 then
+  print("DBG: Check torchSlot [" .. torchSlot .. "]")
+  if ( (torchSlot < 1) or (torchSlot > 16) ) then
     print("Invalid slot passed for torches")
     torchSlot = 0
     hasTorch = false
   else
+    local data = turtle.getItemDetail(torchSlot)
+    if data then
+      print("Item name: ", data.name)
+      print("Item damage value: ", data.damage)
+      print("Item count: ", data.count)
+    else
+      print("Could not get item data")
+    end
+
     local numTorch = turtle.getItemCount(torchSlot)
-    if numTorch > 1 then
+    print("DBG: numTorch = " .. tostring(numtorch))
+    turtle.select(torchSlot)
+    numTorch = turtle.getItemCount()
+    print("DBG: numTorch (2) = " .. tostring(numtorch))
+
+    if (numTorch > 0) or (data.count >= 1) then
       hasTorch = true
       print("Using torches in slot " .. torchSlot)
+    else
+      print("No torches to place")
+      torchSlot = 0
+      hasTorch = false
     end
   end
+  -- return false
 else
   print("Not using torches")
+  -- return false
 end
 
-if targs[4] ~= nil then
+if (targs[4] ~= nil) then
   enderSlot = tonumber(targs[4])
-  if enderSlot < 1 or enderSlot > 16 then
+  if (enderSlot < 1) or (enderSlot > 16) then
     print("Invalid slot passed for ender chest")
     enderSlot = 0
     hasEnder = false
   else
     local numEnder = turtle.getItemCount(enderSlot)
-    if numEnder > 0 then
+    if (numEnder > 0) then
       hasEnder = true
       print("Using ender chest in slot " .. enderSlot)
     else
@@ -80,6 +133,9 @@ else
   print("Not using ender chest")
 end
 
+
+print("DBG: tslot = " .. torchSlot)
+print("DBG: has t = " .. tostring(hasTorch))
 
 print(" ")
 print("Mine both directions " .. numBlocks .. " blocks")
@@ -120,13 +176,9 @@ for i = 1, numBlocks do
     local modVal = (placeCount + 1) % 5
     
     if (modVal == 0) then
-      turtle.select(torchSlot)
-      turtle.back()
-      turtle.turnRight()
-      turtle.placeUp()
-      turtle.turnLeft()
-      turtle.forward()
-      turtle.select(1)
+      -- This appears to not work after v1.12.2 :(
+      placeTorchOld(torchSlot)
+      -- placeTorch(torchSlot)
     end
   end
 end
