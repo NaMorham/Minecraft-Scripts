@@ -12,12 +12,6 @@ if not os.loadAPI("turtleEx") then
   return
 end
 
-if not os.loadAPI("turtleEx") then
-  error("Could not load required api.")
-  return
-end
-
-
 -- args {num blocks, numtries, torchslot}
 -- rely on the api to handle the number of tries
 
