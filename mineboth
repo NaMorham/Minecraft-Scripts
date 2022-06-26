@@ -97,7 +97,7 @@ if (targs[3] ~= nil) then
     numTorch = turtle.getItemCount()
     print("DBG: numTorch (2) = " .. tostring(numtorch))
 
-    if (numTorch > 0) or (data.count >= 1) then
+    if (numTorch > 0) then -- or (data.count >= 1) then
       hasTorch = true
       print("Using torches in slot " .. torchSlot)
     else
