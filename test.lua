@@ -1,4 +1,4 @@
-os.loadAPI("turtleEx")
+os.loadAPI("turtleEx.lua")
 
 -- try up
 for i = 1, 3 do

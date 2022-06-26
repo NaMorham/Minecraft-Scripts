@@ -5,7 +5,7 @@ local dist = 2
 local numTries = 5
 local selSlot = 1
 
-if not os.loadAPI("turtleEx") then
+if not os.loadAPI("turtleEx.lua") then
   error("Could not load required api.")
   return
 end

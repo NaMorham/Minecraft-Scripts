@@ -8,7 +8,7 @@ local enderSlot = 16
 local hasEnder = false
 local hasTorch = false
 
-if not os.loadAPI("turtleEx") then
+if not os.loadAPI("turtleEx.lua") then
   error("Could not load required api.")
   return
 end

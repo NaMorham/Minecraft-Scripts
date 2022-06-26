@@ -4,7 +4,7 @@ local numBlocks = 1
 local dfltTries = 10
 local numTries = dfltTries
 
-if not os.loadAPI("turtleEx") then
+if not os.loadAPI("turtleEx.lua") then
   error("Could not load required api.")
   return
 end

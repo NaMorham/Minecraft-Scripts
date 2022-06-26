@@ -1,4 +1,4 @@
-os.loadAPI("turtleEx")
+os.loadAPI("turtleEx.lua")
 
 local targs = {...}
 local dist = 1

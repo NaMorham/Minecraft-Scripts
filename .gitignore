@@ -39,4 +39,6 @@ luac.out
 *.x86_64
 *.hex
 
-carveTower.lua.bak clearRoof.lua.bak mineboth.bak mineforward.bak startup.bak
+*.bk
+*.bak
+

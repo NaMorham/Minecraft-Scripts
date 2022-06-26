@@ -1,4 +1,4 @@
-os.loadAPI("turtleEx")
+os.loadAPI("turtleEx.lua")
 -- Ryan Fechney
 -- Builds circular walls
 -- Place the turlte at the edge of the circle.  The turtile will build the tower to it's right.

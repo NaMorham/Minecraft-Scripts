@@ -1,4 +1,4 @@
-os.loadAPI("turtleEx")
+os.loadAPI("turtleEx.lua")
 
 local wallHeight = 7
 local wallWidth = 9
