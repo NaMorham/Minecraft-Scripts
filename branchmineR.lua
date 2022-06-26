@@ -86,6 +86,8 @@ if targs[4] ~= nil then
     end
   end
 else
+  torchSlot = 0
+  hasTorch = false
   print("Not using torches")
 end
 
@@ -109,6 +111,8 @@ if targs[5] ~= nil then
     end
   end
 else
+  enderSlot = 0
+  hasEnder = false
   print("Not using ender chest")
 end
 
