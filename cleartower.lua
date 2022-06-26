@@ -8,7 +8,7 @@ local direction = "left"
 local numTries = 5
 
 
-if not os.loadAPI("turtleEx") then
+if not os.loadAPI("turtleEx.lua") then
   error("Could not load required api.")
   return
 end

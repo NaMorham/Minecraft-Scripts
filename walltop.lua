@@ -1,4 +1,4 @@
-if not os.loadAPI("turtleEx") then
+if not os.loadAPI("turtleEx.lua") then
   error("Could not load turtleEx API")
   return false
 end

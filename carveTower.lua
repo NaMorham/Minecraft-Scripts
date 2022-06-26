@@ -9,7 +9,7 @@ local innerHeight = 1
 local innerLong = 3
 local innerWide = 3
 
-if not os.loadAPI("turtleEx") then
+if not os.loadAPI("turtleEx.lua") then
   error("Could not load required api.")
   return
 end
