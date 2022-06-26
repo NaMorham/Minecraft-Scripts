@@ -86,6 +86,8 @@ if targs[4] ~= nil then
     end
   end
 else
+  torchSlot = 0
+  hasTorch = false
   print("Not using torches")
 end
 
@@ -104,11 +106,13 @@ if targs[5] ~= nil then
       print("Using ender chest in slot " .. enderSlot)
     else
       print("No ender chest available in slot " .. enderSlot)
-      hasEnder = false
       enderSlot = 0
+      hasEnder = false
     end
   end
 else
+  enderSlot = 0
+  hasEnder = false
   print("Not using ender chest")
 end
 
@@ -134,7 +138,7 @@ for i = 1,numBranches do
   
   -- should already be facing the correct direction
   -- so mine again, this is the right side
-  if not shell.run("mineboth", branchSize, numTries, torchSlot) then
+  if not shell.run("mineboth", branchSize, numTries, torchSlot, enderSlot) then
     print("Unable to branch right")
     return false
   end

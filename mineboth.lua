@@ -26,6 +26,26 @@ local function placeTorchOld(torchslot)
   turtle.select(1)
 end
 
+local function placeTorchBehind(torchslot)
+  turtle.select(torchSlot)
+  turtle.turnRight()
+  turtle.turnRight()
+  turtle.place()
+  turtle.turnLeft()
+  turtle.turnLeft()
+  turtle.select(1)
+end
+
+local function placeTorchEx(torchslot)
+  turtle.select(torchSlot)
+  turtle.back()
+  turtle.down()
+  turtle.placeUp()
+  turtle.up()
+  turtle.forward()
+  turtle.select(1)
+end
+
 local function placeTorchAhead(torchslot)
   turtle.select(torchSlot)
   turtle.back()
@@ -108,6 +128,8 @@ if (targs[3] ~= nil) then
   end
   -- return false
 else
+  torchSlot = 0
+  hasTorch = false
   print("Not using torches")
   -- return false
 end
@@ -130,6 +152,8 @@ if (targs[4] ~= nil) then
     end
   end
 else
+  enderSlot = 0
+  hasEnder = false
   print("Not using ender chest")
 end
 
@@ -177,8 +201,10 @@ for i = 1, numBlocks do
     
     if (modVal == 0) then
       -- This appears to not work after v1.12.2 :(
-      placeTorchOld(torchSlot)
       -- placeTorch(torchSlot)
+      -- This appears to not work after v1.16.2 :(
+      -- placeTorchOld(torchSlot)
+      placeTorchEx(torchSlot)
     end
   end
 end
