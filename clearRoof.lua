@@ -16,13 +16,13 @@ turtle.select(selSlot)
 
 local function placeBlock(numTries)
   print( "selSlot = " .. selSlot .. ", items = " .. turtle.getItemCount(selSlot) )
-  
+
   local itemCount = turtle.getItemCount( selSlot )
   while itemCount < 1 do
     selSlot = selSlot + 1
     turtle.select(selSlot)
     itemCount = turtle.getItemCount( selSlot )
-    if (selSlot > 12 ) then 
+    if (selSlot > 12 ) then
       print ( "No material to build with." )
       return false
     end
@@ -30,7 +30,7 @@ local function placeBlock(numTries)
 
   turtleEx.digUp(numTries)
   turtleEx.placeUp(numTries)
-  
+
   return true
 end
 
@@ -149,7 +149,7 @@ print("Begin building")
 for i = 1,numLong do
   for j = 1,wSide do
     print("Place block [" .. j .. "," .. i .. "]")
-    
+
     if not turtleEx.digDown(numTries) then
       error("Cannot dig down")
       return false
@@ -161,7 +161,7 @@ for i = 1,numLong do
     end
     turtleEx.forward()
   end
-  
+
   local modVal = i % 2
   if modVal == 0 then
     turtle.turnRight()
