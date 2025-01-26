@@ -2,6 +2,8 @@ local targs={...}
 local torchSlot = 16
 local enderSlot = 16
 local direction = "down"
+local continue = 0
+local numTries = 21
 
 
 if not os.loadAPI("turtleEx") then
@@ -69,4 +71,20 @@ else
   print("Not using ender chest")
 end
 
+local startSlot = 1
+local endSlot = 16
+
+-- todo pass args
+--for i = startSlot, endSlot do
+--  if i == torchSlot then
+--    print("Ignore torches in slot " .. i)
+--  turtle.select(i)
+--  turtle.dropDown()
+--end
+--turtle.select(startSlot)
+
+if not turtleEx.dumpAllItems(numTries, torchSlot, enderSlot) then
+  print("Failed to dump items")
+  return false
+end
 

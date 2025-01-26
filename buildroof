@@ -43,7 +43,7 @@ local function usage()
   print("            <num tries> <height>")
 end
 
-if (targs[1] == nil) or (targs[1] == "help") or (targs[1] == "?") then
+if (#targs < 1) or (targs[1] == nil) or (targs[1] == "help") or (targs[1] == "?") then
   usage()
   return
 end
@@ -85,9 +85,9 @@ end
 -- height to raise
 if targs[5] ~= nil then
   raiseHeight = tonumber(targs[5])
-  if raiseHeight < 0 then
-    raiseHeight = 0
-  end
+--  if raiseHeight < 0 then
+--    raiseHeight = 0
+--  end
 else
   print("raiseHeight == nil")
 end
@@ -109,7 +109,7 @@ if dist > 0 then
   end
 end
 
--- move up if needed
+-- move up/down as needed
 if raiseHeight > 0 then
   print("  up " .. raiseHeight .. " blocks")
   for i = 1,raiseHeight do
@@ -119,6 +119,17 @@ if raiseHeight > 0 then
     end
     turtleEx.up()
   end
+
+elseif raiseHeight < 0 then
+  print("  down " .. raiseHeight .. " blocks")
+  for i = 1, math.abs(raiseHeight) do
+    if not turtleEx.digDown(numTries) then
+      error("Could not dig down")
+      return false
+    end
+    turtleEx.down()
+  end
+  
 end
 
 -- move to the corner to start
@@ -196,32 +207,48 @@ end
 -- return to start
 print("Build finished, return to start")
 
-turtle.turnLeft()
-if not turtleEx.forward(shiftLeft) then
-  error("Cannot return to middle")
-  return false
-end
-turtle.turnLeft()
-
-local returnDist = numLong-1
-if returnDist > 1 then
-  if not turtleEx.forward(returnDist) then
-    error("Cannot return to start")
+if ((numLong % 2) == 0) then
+  -- we go out an even number of rows so we would have ended at the left side and need to return right
+  turtle.turnRight()
+  if not turtleEx.forward(shiftLeft) then
+    error("Cannot return to middle")
     return false
   end
+  turtle.turnRight()
+else
+  -- we go out an odd number of rows so we would have ended at the right side and need to return left
+  turtle.turnLeft()
+  if not turtleEx.forward(shiftLeft) then
+    error("Cannot return to middle")
+    return false
+  end
+  turtle.turnLeft()
 end
 
 if raiseHeight > 0 then
   if not turtleEx.down(raiseHeight) then
     error("Cannot return down")
   end
+elseif raiseHeight < 0 then
+  if not turtleEx.up(math.abs(raiseHeight)) then
+    error("Cannot return up")
+  end
+end
+
+local returnDist = numLong-1
+if returnDist > 1 then
+  if not turtleEx.forward(returnDist) then
+    error("Cannot return to start (long axis)")
+    return false
+  end
 end
 
 if not turtleEx.forward(dist) then
-  error("Cannot return to start")
+  error("Cannot return to start (offset dist)")
   return false
 end
 
 turtleEx.turnLeft(2)
 
 return true
+
