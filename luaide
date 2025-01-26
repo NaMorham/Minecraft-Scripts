@@ -2214,3 +2214,4 @@ term.clear()
 term.setCursorPos(1, 1)
 centerPrint("Thank You for Using Lua IDE " .. version)
 centerPrint("Made by GravityScore")
+
