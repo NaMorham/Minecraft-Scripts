@@ -456,6 +456,41 @@ function up(numBlocks)
   return true
 end
 
+-- dig+move up
+function mineUp(numBlocks, numTries)
+  local _numBlocks = 1
+  local _numTries = 5
+
+  if numBlocks ~= nil then
+    _numBlocks = tonumber(numBlocks)
+  end
+  if (_numBlocks < 1) then
+    _numBlocks = 1
+  end
+  
+  if numTries ~= nil then
+    _numTries = tonumber(numTries)
+  end
+  if (_numTries < 1) then
+    _numTries = 5
+  end
+
+  print("MineUp " .. _numBlocks .. " blocks, trying " .. _numTries .. " times")  
+  for i = 1,_numBlocks do
+    if digUp(numTries) then
+      if not turtle.up() then
+        error("Cannot move up.")
+        return false
+      end
+	else
+	  error("Cannot dig up")
+	  return false
+	end
+  end
+  
+  return true
+end
+
 -- move down
 function down(numBlocks)
   local _numBlocks = 1
@@ -595,3 +630,4 @@ function dumpAllItems(nTries, tSlot, eSlot)
   
   return true
 end
+
